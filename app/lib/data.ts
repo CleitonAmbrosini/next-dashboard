@@ -119,7 +119,6 @@ export async function fetchFilteredInvoices(
 }
 
 export async function fetchInvoicesPages(query: string) {
-  let invoice: any;
   try {
     const data = await sql`SELECT COUNT(*)
     FROM invoices
@@ -133,7 +132,7 @@ export async function fetchInvoicesPages(query: string) {
   `;
 
     const totalPages = Math.ceil(Number(data[0].count) / ITEMS_PER_PAGE);
-    return invoice[0];
+    return totalPages;
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch total number of invoices.");
