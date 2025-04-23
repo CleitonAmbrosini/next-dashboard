@@ -1,0 +1,38 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
+}
+
+model users {
+  id String @default(cuid()) @id
+  name String @db.VarChar(255)
+  email String @unique
+  password String
+}
+
+model invoices {
+  id String @default(cuid()) @id
+  customer_id String
+  amount Int
+  status String @db.VarChar(255)
+  date DateTime
+}
+
+model customers {
+  id String @default(cuid()) @id
+  name String @db.VarChar(255)
+  email String @db.VarChar(255)
+  image_url String @db.VarChar(255)
+}
+
+model revenue {
+  month String @db.VarChar(255) @unique
+  revenue Int
+}
