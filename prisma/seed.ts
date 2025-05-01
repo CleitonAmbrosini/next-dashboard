@@ -21,20 +21,6 @@ async function main() {
     })
   );
 
-  const insertedInvoices = await Promise.all(
-    invoices.map(async (invoice) => {
-      await prisma.invoices.createMany({
-        data: {
-          customer_id: invoice.customer_id,
-          amount: invoice.amount,
-          status: invoice.status,
-          date: new Date(invoice.date).toISOString(),
-        },
-        skipDuplicates: true,
-      });
-    })
-  );
-
   const insertedCustomers = await Promise.all(
     customers.map(async (customer) => {
       await prisma.customers.createMany({
@@ -43,6 +29,20 @@ async function main() {
           name: customer.name,
           email: customer.email,
           image_url: customer.image_url,
+        },
+        skipDuplicates: true,
+      });
+    })
+  );
+
+  const insertedInvoices = await Promise.all(
+    invoices.map(async (invoice, index) => {
+      await prisma.invoices.createMany({
+        data: {
+          customer_id: invoice.customer_id,
+          amount: invoice.amount,
+          status: invoice.status,
+          date: new Date(invoice.date).toISOString(),
         },
         skipDuplicates: true,
       });
