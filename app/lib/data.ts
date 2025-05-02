@@ -1,5 +1,5 @@
 import postgres from "postgres";
-import { CustomerField, CustomersTableType, InvoiceForm } from "./definitions";
+import type { CustomersTableType } from "./definitions";
 import prisma from "./prisma";
 import { formatCurrency } from "./utils";
 
@@ -57,23 +57,36 @@ export async function fetchCardData() {
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
     // how to initialize multiple queries in parallel with JS.
-    const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
-    const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
-    const invoiceStatusPromise = sql`SELECT
-         SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
-         SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
-         FROM invoices`;
+    const invoiceCountPromise = prisma.invoices.count();
+    const customerCountPromise = prisma.customers.count();
+    const invoiceStatusPaidPromise = prisma.invoices.aggregate({
+      _sum: {
+        amount: true,
+      },
+      where: {
+        status: "paid",
+      },
+    });
+    const invoiceStatusPendingPromise = prisma.invoices.aggregate({
+      _sum: {
+        amount: true,
+      },
+      where: {
+        status: "pending",
+      },
+    });
 
     const data = await Promise.all([
       invoiceCountPromise,
       customerCountPromise,
-      invoiceStatusPromise,
+      invoiceStatusPaidPromise,
+      invoiceStatusPendingPromise,
     ]);
 
-    const numberOfInvoices = Number(data[0][0].count ?? "0");
-    const numberOfCustomers = Number(data[1][0].count ?? "0");
-    const totalPaidInvoices = formatCurrency(data[2][0].paid ?? "0");
-    const totalPendingInvoices = formatCurrency(data[2][0].pending ?? "0");
+    const numberOfInvoices = Number(data[0] ?? "0");
+    const numberOfCustomers = Number(data[1] ?? "0");
+    const totalPaidInvoices = formatCurrency(Number(data[2]._sum.amount));
+    const totalPendingInvoices = formatCurrency(Number(data[3]._sum.amount));
 
     return {
       numberOfCustomers,
@@ -211,15 +224,17 @@ export async function fetchInvoicesPages(query: string) {
 
 export async function fetchInvoiceById(id: string) {
   try {
-    const data = await sql<InvoiceForm[]>`
-      SELECT
-        invoices.id,
-        invoices.customer_id,
-        invoices.amount,
-        invoices.status
-      FROM invoices
-      WHERE invoices.id = ${id};
-    `;
+    const data = await prisma.invoices.findMany({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        customer_id: true,
+        amount: true,
+        status: true,
+      },
+    });
 
     const invoice = data.map((invoice) => ({
       ...invoice,
@@ -236,13 +251,15 @@ export async function fetchInvoiceById(id: string) {
 
 export async function fetchCustomers() {
   try {
-    const customers = await sql<CustomerField[]>`
-      SELECT
-        id,
-        name
-      FROM customers
-      ORDER BY name ASC
-    `;
+    const customers = await prisma.customers.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+      orderBy: {
+        name: "asc",
+      },
+    });
 
     return customers;
   } catch (err) {
@@ -253,23 +270,25 @@ export async function fetchCustomers() {
 
 export async function fetchFilteredCustomers(query: string) {
   try {
-    const data = await sql<CustomersTableType[]>`
-		SELECT
-		  customers.id,
-		  customers.name,
-		  customers.email,
-		  customers.image_url,
-		  COUNT(invoices.id) AS total_invoices,
-		  SUM(CASE WHEN invoices.status = 'pending' THEN invoices.amount ELSE 0 END) AS total_pending,
-		  SUM(CASE WHEN invoices.status = 'paid' THEN invoices.amount ELSE 0 END) AS total_paid
-		FROM customers
-		LEFT JOIN invoices ON customers.id = invoices.customer_id
-		WHERE
-		  customers.name ILIKE ${`%${query}%`} OR
-        customers.email ILIKE ${`%${query}%`}
-		GROUP BY customers.id, customers.name, customers.email, customers.image_url
-		ORDER BY customers.name ASC
-	  `;
+    const data = await prisma.$queryRawUnsafe<CustomersTableType[]>(
+      `
+        SELECT
+          customers.id,
+          customers.name,
+          customers.email,
+          customers.image_url,
+          COUNT(invoices.id) AS total_invoices,
+          SUM(CASE WHEN invoices.status = 'pending' THEN invoices.amount ELSE 0 END) AS total_pending,
+          SUM(CASE WHEN invoices.status = 'paid' THEN invoices.amount ELSE 0 END) AS total_paid
+        FROM customers
+        LEFT JOIN invoices ON customers.id = invoices.customer_id
+        WHERE
+          customers.name ILIKE $1 OR customers.email ILIKE $1
+        GROUP BY customers.id, customers.name, customers.email, customers.image_url
+        ORDER BY customers.name ASC
+      `,
+      `%${query}%`
+    );
 
     const customers = data.map((customer) => ({
       ...customer,
