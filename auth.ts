@@ -2,7 +2,6 @@ import type { User } from "@/app/lib/definitions";
 import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import postgres from "postgres";
 import { z } from "zod";
 import prisma from "./app/lib/prisma";
 import { authConfig } from "./auth.config";
@@ -34,7 +33,7 @@ export const { auth, signIn, signOut } = NextAuth({
           const { email, password } = parsedCredentials.data;
           const user = await getUser(email);
           if (!user) return null;
-          const passwordsMatch = await bcrypt.compare(password, user.password);
+          const passwordsMatch = bcrypt.compareSync(password, user.password);
           if (passwordsMatch) return user;
         }
 

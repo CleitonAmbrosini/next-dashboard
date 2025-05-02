@@ -1,9 +1,6 @@
-import postgres from "postgres";
 import type { CustomersTableType } from "./definitions";
 import prisma from "./prisma";
 import { formatCurrency } from "./utils";
-
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
 export async function fetchRevenue() {
   try {
@@ -165,7 +162,6 @@ export async function fetchFilteredInvoices(
       skip: offset,
     });
 
-    console.log("🚀 ~ invoices:", invoices);
     return invoices;
   } catch (error) {
     console.error("Database Error:", error);

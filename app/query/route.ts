@@ -1,7 +1,4 @@
-import postgres from "postgres";
 import prisma from "../lib/prisma";
-
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
 async function listInvoices() {
   const invoices = await prisma.invoices.findMany({
