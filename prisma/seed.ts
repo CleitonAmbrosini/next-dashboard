@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import {
   customers,
   invoices,
@@ -9,12 +10,13 @@ import prisma from "../app/lib/prisma";
 async function main() {
   const insertedUsers = await Promise.all(
     users.map(async (user) => {
+      const hashedPassword = await bcrypt.hash(user.password, 10);
       await prisma.users.createMany({
         data: {
           id: user.id,
           name: user.name,
           email: user.email,
-          password: user.password,
+          password: hashedPassword,
         },
         skipDuplicates: true,
       });
