@@ -7,7 +7,6 @@ import { z } from "zod";
 import prisma from "./app/lib/prisma";
 import { authConfig } from "./auth.config";
 
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 async function getUser(email: string): Promise<User | undefined> {
   try {
     const user = await prisma.users.findUnique({

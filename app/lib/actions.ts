@@ -1,13 +1,11 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import postgres from "postgres";
-import { z } from "zod";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
-
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { z } from "zod";
+import prisma from "./prisma";
 
 const FormSchema = z.object({
   id: z.string(),
@@ -40,7 +38,6 @@ export async function createInvoice(prevState: State, formData: FormData) {
     amount: formData.get("amount"),
     status: formData.get("status"),
   });
-  console.log("🚀 ~ createInvoice ~ validatedFields:", validatedFields);
 
   if (!validatedFields.success) {
     return {
@@ -54,10 +51,14 @@ export async function createInvoice(prevState: State, formData: FormData) {
   const date = new Date().toISOString().split("T")[0];
 
   try {
-    await sql`
-    INSERT INTO invoices (customer_id, amount, status, date)
-    VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
-  `;
+    await prisma.invoices.create({
+      data: {
+        customer_id: customerId,
+        amount: amountInCents,
+        status,
+        date,
+      },
+    });
   } catch (error) {
     console.log(error);
   }
@@ -67,7 +68,11 @@ export async function createInvoice(prevState: State, formData: FormData) {
 }
 
 const UpdateInvoice = FormSchema.omit({ id: true, date: true });
-export async function updateInvoice(id: string, prevState: State, formData: FormData) {
+export async function updateInvoice(
+  id: string,
+  prevState: State,
+  formData: FormData
+) {
   const validatedData = UpdateInvoice.safeParse({
     customerId: formData.get("customerId"),
     amount: formData.get("amount"),
@@ -85,11 +90,16 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
   const amountInCents = amount * 100;
 
   try {
-    await sql`
-      UPDATE invoices
-      SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
-      WHERE id = ${id}
-    `;
+    await prisma.invoices.update({
+      where: {
+        id,
+      },
+      data: {
+        customer_id: customerId,
+        amount: amountInCents,
+        status,
+      },
+    });
   } catch (error) {
     console.log(error);
   }
@@ -100,7 +110,9 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
 
 export async function deleteInvoice(id: string) {
   try {
-    await sql`DELETE FROM invoices WHERE id = ${id}`;
+    await prisma.invoices.delete({
+      where: { id },
+    });
   } catch (error) {
     console.log(error);
   }
@@ -115,6 +127,7 @@ export async function authenticate(
     await signIn("credentials", formData);
   } catch (error) {
     if (error instanceof AuthError) {
+      // @ts-ignore
       switch (error.type) {
         case "CredentialsSignin":
           return "Invalid credentials.";
