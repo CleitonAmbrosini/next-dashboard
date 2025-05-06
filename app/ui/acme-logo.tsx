@@ -1,13 +1,22 @@
-import { GlobeAltIcon } from '@heroicons/react/24/outline';
-import { lusitana } from '@/app/ui/fonts';
+import { nunito } from "@/app/ui/fonts";
+import Logo from "@/public/logo.svg";
+import Image from "next/image";
 
 export default function AcmeLogo() {
   return (
-    <div
-      className={`${lusitana.className} flex flex-row items-center leading-none text-white`}
-    >
-      <GlobeAltIcon className="h-12 w-12 rotate-[15deg]" />
-      <p className="text-[44px]">Acme</p>
+    <div className="flex flex-row justify-end">
+      <Image
+        className="flex flex-row"
+        src={Logo}
+        width={70}
+        height={100}
+        alt="Dash logo image"
+      />
+      <h1
+        className={`${nunito.className} flex flex-row pt-12 text-white text-[38px]`}
+      >
+        Dash
+      </h1>
     </div>
   );
 }
