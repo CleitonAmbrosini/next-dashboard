@@ -1,33 +1,14 @@
-import AcmeLogo from "./ui/acme-logo";
+import DashLogo from "./ui/dash-logo";
 
 export default function Page() {
   return (
-    <main className="h-screen bg-[url('/bg-img-2.jpg')] bg-cover bg-right-top">
-      <div className="absolute h-screen w-screen inset-0 bg-gradient-to-r from-[#282a36] via-[#282a36] to-[#282a36]/50" />
-      <div className="relative z-10 flex justify-center h-full">
-        <div className="fixed ml-26 left-2/4 transform -translate-x-1/2 top-0 z-0">
-          <svg
-            viewBox="0 0 100 1000"
-            className="h-screen w-24"
-            preserveAspectRatio="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M50,0
-                Q70,100 50,200
-                Q30,300 50,400
-                Q70,500 50,600
-                Q30,700 50,800
-                Q70,900 50,1000"
-              fill="none"
-              stroke="#b5ddd830"
-              stroke-width="2"
-              stroke-dasharray="8,8"
-            />
-          </svg>
-        </div>
-        <div className="w-screen h-14 flex align-top">
-          <AcmeLogo />
+    <main className="h-screen w-screen flex bg-dark-primary">
+      <div className="flex flex-col m-auto h-[648px] w-[641px] border border-gray-200 rounded-2xl shadow-sm sm:p-8 dark:bg-dark-secondary dark:border-gray-700">
+        <div className="flex flex-col mt-12 h-1/2 w-[100%] rounded-t-3xl">
+          <DashLogo />
+          <h2 className="text-center h-6 w-[100%] text-dark-primaryText text-2xl mt-2">
+            <strong>Welcome to CashBoard</strong>
+          </h2>
         </div>
       </div>
     </main>
