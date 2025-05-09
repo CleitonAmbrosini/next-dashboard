@@ -23,6 +23,7 @@
     "react-dom": "latest",
     "tailwindcss": "3.4.17",
     "use-debounce": "^10.0.4",
+    "uuid": "^11.1.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {

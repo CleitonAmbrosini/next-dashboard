@@ -1,9 +1,11 @@
 "use server";
 
 import { signIn } from "@/auth";
+import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 import prisma from "./prisma";
 
@@ -136,5 +138,28 @@ export async function authenticate(
       }
     }
     throw error;
+  }
+}
+
+export async function registerUser(
+  prevState: string | undefined,
+  formData: FormData
+) {
+  try {
+    const password = formData.get("password");
+    const confirmPassword = formData.get("confirmPassword");
+    if (password !== confirmPassword) throw new Error("Password are diferent.");
+    const hashedPassword = await bcrypt.hash(String(password), 10);
+    await prisma.users.create({
+      data: {
+        email: String(formData.get("email")),
+        name: String(formData.get("name")),
+        password: hashedPassword,
+        id: uuidv4(),
+      },
+    });
+    redirect('/');
+  } catch (error) {
+    return (error as Error).message;
   }
 }

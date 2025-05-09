@@ -1,8 +1,7 @@
-import LoginForm from "@/app/ui/login-form";
-import { Suspense } from "react";
 import DashLogo from "@/app/ui/dash-logo";
 import { nunito } from "@/app/ui/fonts";
-
+import RegisterUserForm from "@/app/ui/resgister-user";
+import { Suspense } from "react";
 
 export default function Page() {
   return (
@@ -17,7 +16,7 @@ export default function Page() {
           </h2>
         </div>
         <Suspense>
-          <LoginForm />
+          <RegisterUserForm />
         </Suspense>
       </div>
     </main>
