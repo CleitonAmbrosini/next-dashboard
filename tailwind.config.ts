@@ -18,9 +18,9 @@ const config: Config = {
           600: "#2F6FEB",
         },
         dark: {
-          primary: "#181920",
-          secondary: "#252a34",
-          highlight: "#b5ddd8",
+          primary: "#0a0f24",
+          secondary: "#131934",
+          highlight: "#50bffc",
           primaryText: "#ffffff",
           secondaryText: "#A0A0A0",
           success: "#2ecc71",
