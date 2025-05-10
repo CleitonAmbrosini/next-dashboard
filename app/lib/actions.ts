@@ -141,11 +141,23 @@ export async function authenticate(
   }
 }
 
+async function confirmEmail(email: string) {
+  return await prisma.users.findUnique({
+    where: {
+      email,
+    },
+  });
+}
+
 export async function registerUser(
   prevState: string | undefined,
   formData: FormData
 ) {
   try {
+    console.log("email", confirmEmail(String(formData.get("email"))));
+    if (await confirmEmail(String(formData.get("email")))) {
+      throw new Error("There is already an account with that email.");
+    }
     const password = formData.get("password");
     const confirmPassword = formData.get("confirmPassword");
     if (password !== confirmPassword) throw new Error("Password are diferent.");
@@ -158,8 +170,8 @@ export async function registerUser(
         id: uuidv4(),
       },
     });
-    redirect('/');
   } catch (error) {
     return (error as Error).message;
   }
+  redirect("/");
 }
