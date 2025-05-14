@@ -18,17 +18,20 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
 
   return (
     <form action={formAction}>
-      <div className="rounded-md bg-gray-50 p-4 md:p-6">
+      <div className="rounded-md bg-dark-secondary p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
-          <label htmlFor="customer" className="mb-2 block text-sm font-medium">
+          <label
+            htmlFor="customer"
+            className="mb-2 block text-sm font-medium text-dark-primaryText"
+          >
             Choose customer
           </label>
           <div className="relative">
             <select
               id="customer"
               name="customerId"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 bg-dark-secondary text-dark-primaryText"
               defaultValue=""
               aria-describedby="customer-error"
             >
@@ -55,7 +58,10 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
 
         {/* Invoice Amount */}
         <div className="mb-4">
-          <label htmlFor="amount" className="mb-2 block text-sm font-medium">
+          <label
+            htmlFor="amount"
+            className="mb-2 block text-sm font-medium text-dark-primaryText"
+          >
             Choose an amount
           </label>
           <div className="relative mt-2 rounded-md">
@@ -66,10 +72,10 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                 type="number"
                 step="0.01"
                 placeholder="Enter USD amount"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 bg-dark-secondary text-dark-primaryText placeholder:text-dark-primaryText"
                 aria-describedby="amount-error"
               />
-              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-dark-secondaryText" />
             </div>
           </div>
           <div id="amount-error" aria-live="polite" aria-atomic="true">
@@ -84,10 +90,10 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
 
         {/* Invoice Status */}
         <fieldset>
-          <legend className="mb-2 block text-sm font-medium">
+          <legend className="mb-2 block text-sm font-medium text-dark-primaryText">
             Set the invoice status
           </legend>
-          <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3">
+          <div className="rounded-md border border-gray-200 bg-dark-secondary px-[14px] py-3">
             <div className="flex gap-4">
               <div className="flex items-center">
                 <input
@@ -144,11 +150,16 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
       <div className="mt-6 flex justify-end gap-4">
         <Link
           href="/dashboard/invoices"
-          className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+          className="flex h-10 items-center rounded-lg bg-dark-secondary px-4 text-sm font-medium text-dark-primaryText transition-colors hover:bg-dark-highlight"
         >
           Cancel
         </Link>
-        <Button type="submit">Create Invoice</Button>
+        <Button
+          type="submit"
+          className="hover:text-dark-primaryText hover:bg-dark-highlight"
+        >
+          Create Invoice
+        </Button>
       </div>
     </form>
   );
