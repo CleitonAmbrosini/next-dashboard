@@ -70,11 +70,11 @@ function PaginationNumber({
   isActive: boolean;
 }) {
   const className = clsx(
-    "flex h-10 w-10 items-center justify-center text-sm border text-dark-primaryText",
+    "flex h-10 w-10 items-center justify-center text-sm border text-dark-primaryText hover:bg-dark-highlight",
     {
       "rounded-l-md": position === "first" || position === "single",
       "rounded-r-md": position === "last" || position === "single",
-      "z-10 bg-blue-600 text-white": isActive,
+      "z-10 bg-dark-highlight text-white": isActive,
       "hover:bg-gray-100": !isActive && position !== "middle",
       "text-gray-300": position === "middle",
     }
