@@ -1,7 +1,6 @@
 import NavLinks from "@/app/ui/dashboard/nav-links";
 import { signOut } from "@/auth";
 import { PowerIcon } from "@heroicons/react/24/outline";
-import Link from "next/link";
 
 export default function SideNav() {
   return (
