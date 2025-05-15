@@ -1,6 +1,6 @@
-import { clsx } from 'clsx';
-import Link from 'next/link';
-import { nunito } from '@/app/ui/fonts';
+import { roboto } from "@/app/ui/fonts";
+import { clsx } from "clsx";
+import Link from "next/link";
 
 interface Breadcrumb {
   label: string;
@@ -15,13 +15,15 @@ export default function Breadcrumbs({
 }) {
   return (
     <nav aria-label="Breadcrumb" className="mb-6 block">
-      <ol className={clsx(nunito.className, 'flex text-xl md:text-2xl')}>
+      <ol className={clsx(roboto.className, "flex text-xl md:text-2xl")}>
         {breadcrumbs.map((breadcrumb, index) => (
           <li
             key={breadcrumb.href}
             aria-current={breadcrumb.active}
             className={clsx(
-              breadcrumb.active ? 'text-dark-primaryText' : 'text-dark-secondaryText',
+              breadcrumb.active
+                ? "text-dark-primaryText"
+                : "text-dark-secondaryText"
             )}
           >
             <Link href={breadcrumb.href}>{breadcrumb.label}</Link>

@@ -1,7 +1,7 @@
 import CardWrapper from "@/app/ui/dashboard/cards";
 import LatestInvoices from "@/app/ui/dashboard/latest-invoices";
 import RevenueChart from "@/app/ui/dashboard/revenue-chart";
-import { nunito } from "@/app/ui/fonts";
+import { roboto } from "@/app/ui/fonts";
 import {
   CardsSkeleton,
   LatestInvoicesSkeleton,
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   return (
-    <main className={`${nunito.className}`}>
+    <main className={`${roboto.className}`}>
       <h1 className={"mb-4 text-xl md:text-2xl text-dark-primaryText"}>
         Dashboard
       </h1>

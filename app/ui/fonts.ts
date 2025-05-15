@@ -1,4 +1,4 @@
-import { Inter, Nunito } from "next/font/google";
+import { Inter, Roboto } from "next/font/google";
 
 export const inter = Inter({ subsets: ["latin"] });
-export const nunito = Nunito({ subsets: ["latin"], weight: ["700"] });
+export const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });

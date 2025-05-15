@@ -21,15 +21,15 @@ export default function LoginForm() {
   const router = useRouter();
 
   return (
-    <div className="flex-1 rounded-lg px-6 pb-4 pt-8">
+    <div className="flex-1 rounded-lg px-6 pb-4 pt-6">
       <form>
-        <h1 className={`mb-3 text-xl text-dark-primaryText`}>
+        <h1 className={`mb-8 text-xl text-dark-primaryText`}>
           Please log in to continue.
         </h1>
         <div className="w-full">
           <div>
             <label
-              className="mb-3 mt-5 block text-xs font-medium text-dark-primaryText"
+              className="mb-3 mt-5 block text-sm font-medium text-dark-primaryText"
               htmlFor="email"
             >
               Email
@@ -48,7 +48,7 @@ export default function LoginForm() {
           </div>
           <div className="mt-8">
             <label
-              className="mb-3 mt-5 block text-xs font-medium text-dark-primaryText"
+              className="mb-3 mt-5 block text-sm font-medium text-dark-primaryText"
               htmlFor="password"
             >
               Password

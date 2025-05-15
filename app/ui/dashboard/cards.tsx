@@ -1,5 +1,5 @@
 import { fetchCardData } from "@/app/lib/data";
-import { nunito } from "@/app/ui/fonts";
+import { roboto } from "@/app/ui/fonts";
 import {
   BanknotesIcon,
   ClockIcon,
@@ -51,10 +51,12 @@ export function Card({
     <div className="rounded-xl bg-dark-secondary p-2 shadow-sm">
       <div className="flex p-4">
         {Icon ? <Icon className="h-5 w-5 text-gray-700" /> : null}
-        <h3 className="ml-2 text-sm font-medium text-dark-primaryText">{title}</h3>
+        <h3 className="ml-2 text-sm font-medium text-dark-primaryText">
+          {title}
+        </h3>
       </div>
       <p
-        className={`${nunito.className}
+        className={`${roboto.className}
           truncate rounded-xl text-dark-primaryText bg-dark-secondary px-4 py-8 text-center text-2xl`}
       >
         {value}
