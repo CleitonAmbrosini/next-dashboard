@@ -1,6 +1,18 @@
-import type { CustomersTableType } from "./definitions";
+import type { CustomersTableType, InvoiceForm } from "./definitions";
 import prisma from "./prisma";
 import { formatCurrency } from "./utils";
+
+interface Invoice {
+  amount: number;
+  id: string;
+  customer: {
+    name: string;
+    image_url: string;
+    email: string;
+  };
+  status?: string;
+  customer_id?: string;
+}
 
 export async function fetchRevenue() {
   try {
@@ -38,7 +50,7 @@ export async function fetchLatestInvoices() {
       take: 5,
     });
 
-    const latestInvoices = data.map((invoice) => ({
+    const latestInvoices = data.map((invoice: Invoice) => ({
       ...invoice,
       amount: formatCurrency(invoice.amount),
     }));
@@ -229,7 +241,7 @@ export async function fetchInvoiceById(id: string) {
       },
     });
 
-    const invoice = data.map((invoice) => ({
+    const invoice = data.map((invoice: InvoiceForm) => ({
       ...invoice,
       amount: invoice.amount / 100,
     }));
@@ -282,7 +294,7 @@ export async function fetchFilteredCustomers(query: string) {
       `%${query}%`
     );
 
-    const customers = data.map((customer) => ({
+    const customers = data.map((customer: CustomersTableType) => ({
       ...customer,
       total_pending: formatCurrency(customer.total_pending),
       total_paid: formatCurrency(customer.total_paid),
